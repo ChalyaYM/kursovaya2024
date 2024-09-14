@@ -1,0 +1,9 @@
+p {
+    position: relative;
+    left: 9%;
+    font-size: 170%;
+}
+
+input[type="checkbox"] {
+    margin-top: 2%;
+}

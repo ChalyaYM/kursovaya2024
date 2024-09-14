@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Создание статьи</title>
+        <meta charset="utf-8">
+        <script src="/node_modules/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="/styles/article_create.css">
+    </head>
+    <body>
+        <div id="menu" class="top_menu">
+            <a href="/" class="main">Главная</a>
+        </div>
+        <div id="back" class="second_back">
+            <p class="title">Создание статьи</p>
+            <form method="post">
+                <label>Название статьи<br><input type="text" name="name_article"></label><br>
+                <p>
+                    <label>Текст статьи<br><textarea id="textarticle" name="text_article"></textarea></label>
+                    <input type="submit" name="Отправить на модерацию" class="button">
+                </p>
+            </form>
+        </div>
+        <script type="module">
+            tinymce.init({
+                selector: 'textarea#textarticle',
+                license_key: 'gpl'
+            });
+            let res_admin = await fetch(window.location.origin + '/api/isadmin');
+            let is_admin = await res_admin.json();
+            if(is_admin != null) {
+                let profile = create_link('/user/', 'Профиль');
+                menu.append(profile);
+
+                if(is_admin) {
+                    let moderate = create_link('/article/moderate', 'Статьи на модерации');
+                    menu.append(moderate);
+                }
+
+                let logout = create_link('/user/logout', 'Выход');
+                menu.append(logout);
+            } else {
+                let login = create_link('/user/login', 'Войти');
+                menu.append(login);
+
+                let registrate = create_link('/user/registrate', 'Зарегистрироваться');
+                menu.append(registrate);
+            }
+
+            function create_link (href, text) {
+                let elem = document.createElement('a');
+                elem.innerText = text;
+                elem.className = "another_links";
+                elem.setAttribute('href', href);
+                return elem;
+            }
+        </script>
+    </body>
+</html>

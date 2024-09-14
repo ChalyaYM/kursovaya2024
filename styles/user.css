@@ -1,0 +1,21 @@
+.another_links {
+    position: relative;
+    right: -50%;
+}
+
+.concret_article {
+    text-decoration: none;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: 130%;
+    text-transform: uppercase;
+}
+
+.add {
+    font-size: smaller;
+    color:rgb(144, 144, 144);
+}
+
+.name {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: 130%;
+}

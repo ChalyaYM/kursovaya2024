@@ -1,0 +1,11 @@
+p {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: 150%;
+    position: relative;
+    left: 25%;
+}
+
+.another_links {
+    position: relative;
+    right: -70%;
+}

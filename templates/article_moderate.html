@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Статьи на модерации</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="/styles/list_of_moderate.css">
+    </head>
+    <body>
+        <div id="menu" class="top_menu">
+            <a href="/" class="main">Главная</a>
+        </div>
+
+        <div id="back" class="second_back"></div>
+        <script type="module">
+            let res_admin = await fetch(window.location.origin + '/api/isadmin');
+            let is_admin = await res_admin.json();
+            if(is_admin != null) {
+                let create_article = create_link('/article/edit', 'Создание статьи');
+                menu.append(create_article);
+
+                let profile = create_link('/user/', 'Профиль');
+                menu.append(profile);
+
+                let logout = create_link('/user/logout', 'Выход');
+                menu.append(logout);
+
+            } else {
+                let login = create_link('/user/login', 'Войти');
+                console.log(login);
+                menu.append(login);
+
+                let registrate = create_link('/user/registrate', 'Зарегистрироваться');
+                menu.append(registrate);
+            }
+
+            let response = await fetch(window.location.origin + '/api/articleListModerate');
+            let listOfArticles = await response.json();
+            console.log(listOfArticles);
+
+            if(listOfArticles.length == 0){
+                let p = document.createElement('p');
+                p.className = 'none';
+                p.innerHTML = 'Отсутствуют статьи на модерации';
+                back.append(p);
+            } else {
+                for (let i=0; i<listOfArticles.length; i++){
+                    let author_id = {
+                        id: listOfArticles[i].authorId,
+                    };
+
+                    let res_author = await fetch(window.location.origin + '/api/author', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(author_id),
+                    });
+                    let author = await res_author.json();
+
+                    let div = document.createElement('div');
+                    div.className = "article";
+                    div.innerHTML = `<a href="/article/${listOfArticles[i].id}" class="concret_article">` + listOfArticles[i].name + '</a>'+ '<br>' + '<p class="add">Автор: ' + author.login + '</p>';
+                    back.append(div);
+                }
+            }
+
+            function create_link (href, text) {
+                let elem = document.createElement('a');
+                elem.innerText = text;
+                elem.className = 'another_links';
+                elem.setAttribute('href', href);
+                return elem;
+            }
+        </script>
+    </body>
+</html>

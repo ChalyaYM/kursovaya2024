@@ -1,0 +1,38 @@
+.another_links {
+    position: relative;
+    right: -80%;
+}
+
+form {
+    position: relative;
+    left: 27%;
+}
+
+.field {
+    margin: 2%;
+}
+
+.button {
+    position: relative;
+    left: 10%;
+    margin: 3%;
+    padding: 1%;
+    border-radius: 20px;
+    border-color: rgb(229, 250, 215);
+    background-color: rgb(197, 243, 162);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+label, p {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+p {
+    position: relative;
+    left: 16%;
+    font-size: 170%;
+}
+
+input[type="password"] {
+    width: 20%;
+}

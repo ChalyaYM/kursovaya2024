@@ -1,0 +1,22 @@
+.another_links {
+    position: relative;
+    right: -50%;
+}
+
+.del, .accept, .reject {
+    margin: 3%;
+    padding: 1%;
+    border-radius: 20px;
+    border-color: rgb(229, 250, 215);
+    background-color: rgb(197, 243, 162);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.add {
+    font-size: smaller;
+    color:rgb(144, 144, 144);
+}
+
+.article_name {
+    font-size: 150%;
+}

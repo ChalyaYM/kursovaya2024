@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Страница пользователя</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="/styles/user.css">
+    </head>
+    <body>
+        <div id="menu" class="top_menu">
+            <a href="/" class="main">Главная</a>
+        </div>
+
+        <div id="back" class="second_back">
+            <!-- <p>Список статей: </p> -->
+        </div>
+
+        <script type="module">
+            let res_admin = await fetch(window.location.origin + '/api/isadmin');
+            let is_admin = await res_admin.json();
+
+            let create_article = create_link('/article/edit', 'Создание статьи');
+            menu.append(create_article);
+
+            if(is_admin) {
+                let moderate = create_link('/article/moderate', 'Статьи на модерации');
+                menu.append(moderate);
+            }
+
+            let logout = create_link('/user/logout', 'Выход');
+            menu.append(logout);
+
+            let apiPath = window.location.origin + '/api/concretUser';
+            let response = await fetch(apiPath);
+            let user = await response.json();
+
+            let username = user.login;
+            let div = document.createElement('div');
+            div.innerHTML = '<p class="name">Имя пользователя: ' + username + '</p><hr>';
+            back.prepend(div);
+
+            let res_articles = await fetch(window.location.origin + '/api/userArticles');
+            let listOfArticles = await res_articles.json();
+
+            console.log(listOfArticles);
+            
+            for (let i=0; i<listOfArticles.length; i++){
+                let addstr = "";
+                if(listOfArticles[i].isPublished){
+                    addstr = 'Опубликована';
+                }
+                if(listOfArticles[i].isModerating){
+                    addstr = 'На проверке';
+                }
+                if(!(listOfArticles[i].isPublished || listOfArticles[i].isModerating)){
+                    addstr = 'Отклонена';
+                }
+                let user_article = document.createElement('div');
+                user_article.className = "article";
+                user_article.innerHTML = `<a href="/article/${listOfArticles[i].id}" class="concret_article">` + listOfArticles[i].name + '</a>'+ '<br>' + '<p class="add">' + addstr + '</p>' + '<br>' ;
+                back.append(user_article);
+            }
+
+            function create_link (href, text) {
+                let elem = document.createElement('a');
+                elem.innerText = text;
+                elem.className = "another_links";
+                elem.setAttribute('href', href);
+                return elem;
+            }
+        </script>
+    </body>
+</html>

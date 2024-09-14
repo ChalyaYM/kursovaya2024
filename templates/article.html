@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Просмотр статьи</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="/styles/concret_article.css">
+    </head>
+    <body>
+        <div id="menu" class="top_menu">
+            <a href="/" class="main">Главная</a>
+        </div>
+        
+        <div id="back" class="second_back">
+            <div id="buttons"></div>
+        </div>
+
+        <script type="module">
+            let res_admin = await fetch(window.location.origin + '/api/isadmin');
+            let is_admin = await res_admin.json();
+            if(is_admin != null) {
+                let create_article = create_link('/article/edit', 'Создание статьи');
+                menu.append(create_article);
+
+                let profile = create_link('/user/', 'Профиль');
+                menu.append(profile);
+
+                if(is_admin) {
+                    let moderate = create_link('/article/moderate', 'Статьи на модерации');
+                    menu.append(moderate);
+                }
+
+                let logout = create_link('/user/logout', 'Выход');
+                menu.append(logout);
+            } else {
+                let login = create_link('/user/login', 'Войти');
+                menu.append(login);
+
+                let registrate = create_link('/user/registrate', 'Зарегистрироваться');
+                menu.append(registrate);
+            }
+
+            let currPath = window.location.pathname.split('/');
+            let apiPath = window.location.origin + '/api/concretArticle';
+            let response = await fetch(apiPath + '/' + currPath[2]);
+            let concretArticle = await response.json();
+
+            let author_id = {
+                    id: concretArticle.authorId,
+                };
+
+            let res_author = await fetch(window.location.origin + '/api/author', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(author_id),
+            });
+            let author = await res_author.json();
+            
+            let nameOfArticle = concretArticle.name;
+            let dateOfArticle;
+            if(concretArticle.date_published != null) {
+                dateOfArticle = concretArticle.date_published.split('T');
+            }    
+            let textOfArticle = concretArticle.text_article;
+            let addStr;
+            if(concretArticle.isPublished == true) {
+                addStr = 'Дата публикации: ' + dateOfArticle[0] + ' Автор: ' + author.login;
+            } else {
+                addStr = 'Статья находится на модерации.' + ' Автор: ' + author.login;
+            }
+            
+            let div = document.createElement('div');
+            div.innerHTML = '<p class="article_name">' + nameOfArticle + '</p>' + '<p class="add">' + addStr + '</p>' + '<p>' + textOfArticle + '</p>';
+            back.prepend(div);
+
+            if(is_admin && concretArticle.isPublished) {
+                let del = document.createElement('button');
+                del.innerText = 'Удалить статью';
+                del.className = "del";
+                del.onclick = del_article;
+
+                buttons.append(del);
+            }
+            if (is_admin && concretArticle.isModerating) {
+                let accept = document.createElement('button');
+                let reject = document.createElement('button');
+                accept.innerText = 'Опубликовать';
+                accept.className = 'accept';
+                reject.innerText = 'Отклонить';
+                reject.className = 'reject';
+                accept.onclick = accept_article;
+                reject.onclick = reject_article;
+                buttons.append(accept);
+                buttons.append(reject);
+            }
+
+            function create_link (href, text) {
+                let elem = document.createElement('a');
+                elem.innerText = text;
+                elem.className = "another_links";
+                elem.setAttribute('href', href);
+                return elem;
+            }
+
+            async function accept_article() {
+                let change_article = {
+                    id: concretArticle.id,
+                    isPublished: true,
+                    isModerating: false
+                };
+
+                let res = await fetch(window.location.origin + '/article/accept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(change_article),
+                });
+                window.location.pathname = '/article/moderate';
+            }
+
+            async function reject_article() {
+                let change_article = {
+                    id: concretArticle.id
+                }
+                let res = await fetch(window.location.origin + '/article/reject', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(change_article),
+                });
+                window.location.pathname = '/article/moderate';
+            }
+
+            async function del_article() {
+                let del_article = {
+                    id: concretArticle.id
+                }
+                let res = await fetch(window.location.origin + '/article/del', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(del_article),
+                });
+                window.location.pathname = '/';
+            }
+        </script>
+    </body>
+</html>

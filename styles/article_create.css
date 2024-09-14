@@ -1,0 +1,28 @@
+.another_links {
+    position: relative;
+    right: -60%;
+}
+
+label {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+input[type="text"] {
+    width: 95%;
+}
+
+.button {
+    position: relative;
+    left: 40%;
+    margin: 3%;
+    padding: 1%;
+    border-radius: 20px;
+    border-color: rgb(229, 250, 215);
+    background-color: rgb(197, 243, 162);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.title {
+    font-size: 170%;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
